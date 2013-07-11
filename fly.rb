@@ -34,6 +34,8 @@ end
 
 abort 'No input file provided.' unless File.exists?('./airports.dat')
 
+start = Time.now
+
 airports = Array.new
 
 File.open('./airports.dat').each_line do |line|
@@ -43,3 +45,5 @@ File.open('./airports.dat').each_line do |line|
 end
 
 get_all_flights airports
+
+puts "Execution time: #{ Time.now - start }s"
