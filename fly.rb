@@ -18,13 +18,13 @@ def get_flight (airports, airport_count = 0, options = {})
 end
 =end
 
-def get_all_flights(airports, visited_airports = [], continent_switched = nil)
+def get_all_flights(airports, visited_airports = [], last_continent = nil, continent_switched = nil)
   airports.each do |airport|
     next if visited_airports.include? airport[:code]
-    next if continent_switched && airport[:continent] != continent_switched
+    next if continent_switched && airport[:continent] != last_continent
     if visited_airports.length < 4
-      switch_continent = airport[:continent] if continent_switched != airport[:continent]
-      get_all_flights(airports, visited_airports + [airport[:code]], switch_continent)
+      switch_continent = continent_switched || (last_continent && last_continent != airport[:continent]) ? true : false
+      get_all_flights(airports, visited_airports + [airport[:code]], airport[:continent], switch_continent)
     end
   end
   puts visited_airports.join(' - ') unless visited_airports.length == 1
