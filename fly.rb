@@ -18,17 +18,21 @@ def get_flight (airports, airport_count = 0, options = {})
 end
 =end
 
-def get_all_flights(airports, visited_airports = Array.new)
+def get_all_flights(airports, visited_airports = Array.new, continent_switched = nil)
 
   # For each airport
-  airports.each_with_index do |airport, index|
+  airports.each do |airport|
 
     # Proceed to next airport if current one has already been visited
     next if visited_airports.include? airport[:code]
 
+    # Proceed to next airport if going to this one would result in second continent change
+    next if continent_switched && airport[:continent] != continent_switched
+
     # If change limit has not been reached yet, go deeper
     if visited_airports.length < 4
-      get_all_flights(airports, visited_airports + [airport[:code]])
+      switch_continent = airport[:continent] if continent_switched != airport[:continent]
+      get_all_flights(airports, visited_airports + [airport[:code]], switch_continent)
     end
   end
   puts visited_airports.join(' - ') unless visited_airports.length == 1
