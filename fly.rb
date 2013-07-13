@@ -1,13 +1,13 @@
-def get_all_flights(airports, visited_airports = [], last_continent = nil, continent_switched = nil)
-  airports.each do |airport|
-    next if visited_airports.include? airport[:code]
-    next if continent_switched && airport[:continent] != last_continent
+def get_all_flights(airports, visited_airports = {}, last_continent = nil, continent_switched = nil)
+  airports.each do |code, continent|
+    next if visited_airports.has_key? code
+    next if continent_switched && continent != last_continent
     if visited_airports.length < 4
-      switch_continent = continent_switched || (last_continent && last_continent != airport[:continent]) ? true : false
-      get_all_flights(airports, visited_airports + [airport[:code]], airport[:continent], switch_continent)
+      switch_continent = continent_switched || (last_continent && last_continent != continent) ? true : false
+      get_all_flights(airports, visited_airports.merge({code => code}), continent, switch_continent)
     end
   end
-  puts visited_airports.join(' - ') unless visited_airports.length == 1
+  puts visited_airports.values.join(' - ') unless visited_airports.length == 1
 end
 
 # RUN
@@ -16,11 +16,11 @@ abort 'No input file provided.' unless File.exists?('./airports.dat')
 
 start = Time.now
 
-airports = Array.new
+airports = {}
 
 File.open('./airports.dat').each_line do |line|
   line.scan(/([A-Z]{3})\s([A-Z]{2})/) do |code, continent|
-    airports << {code: code, continent: continent}
+    airports[code] = continent
   end
 end
 
