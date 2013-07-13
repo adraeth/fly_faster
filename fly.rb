@@ -3,7 +3,7 @@ def get_all_flights(airports, visited_airports = {}, last_continent = nil, conti
     next if continent_switched && continent != last_continent
     next if visited_airports.has_key? code
     if visited_airports.length == 3
-       puts visited_airports.merge({code => code}).values.join(' - ')
+       puts "#{visited_airports.values.join(' - ')} - #{code}"
     else
       switch_continent = continent_switched || last_continent && last_continent != continent
       get_all_flights(airports, visited_airports.merge({code => code}), continent, switch_continent)
