@@ -1,7 +1,7 @@
 def get_all_flights(airports, visited_airports = {}, last_continent = nil, continent_switched = nil)
   airports.each do |code, continent|
-    next if visited_airports.has_key? code
     next if continent_switched && continent != last_continent
+    next if visited_airports.has_key? code
     if visited_airports.length < 4
       switch_continent = continent_switched || (last_continent && last_continent != continent) ? true : false
       get_all_flights(airports, visited_airports.merge({code => code}), continent, switch_continent)
